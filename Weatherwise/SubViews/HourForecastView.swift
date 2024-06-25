@@ -22,27 +22,12 @@ fileprivate struct TemperatureNowLine: Shape {
 
 fileprivate struct TemperatureCurve: Shape {
    
+   // points holds the pre-calculated points of temperature for every hour
    var points: [CGPoint]
    
-   // temperatures mapped to 0...1
-   // where 0 is the minimum temperature
-   // and 1 is the maximum temperature of the hourly values
-   // var values: [CGFloat] = []
-   // hardcoded cell width for each hour
-   // let desiredItemWidth: CGFloat = 40
-  
-//   init(temperatures: [Int]) {
-//      if let minTemperature = temperatures.min(),
-//         let maxTemperature = temperatures.max(),
-//         maxTemperature != minTemperature {
-//         // map the absolute temperatures to 0...1 range,
-//         self.values = temperatures.map {
-//            CGFloat($0 - minTemperature) / CGFloat(maxTemperature - minTemperature)
-//         }
-//      }
-//   }
-   
-   // use hermite interpolation to create a smooth bezier from temperature values
+   /// This function takes as input an array of points (nodes) and creates a smooth cubic bezier path by interpollating the points
+   /// It uses the 'hermite interpolation' algorithm for interpollation.
+   /// Returns a smooth bezier from temperature values
    func createPathFromValues(points: [CGPoint], rect: CGRect) -> Path {
       var path = Path()
       if points.count > 1 {
@@ -88,20 +73,15 @@ fileprivate struct TemperatureCurve: Shape {
    }
    
    func path(in rect: CGRect) -> Path {
-      
-//      let count = min(values.count - 1, Int(rect.width / desiredItemWidth))
-//
-//      // calculate itemWidth in order to fit the line in given rect
-//      let itemWidth = rect.width / CGFloat(count)
-//      let points = (0...count-1).map {
-//         CGPoint(x: CGFloat($0) * itemWidth, y: values[$0] * rect.height)
-//      }
-      let path = createPathFromValues(points: points, rect: rect)//, itemWidth: itemWidth)
+
+      // create a smooth cubic bezier path and return it
+      let path = createPathFromValues(points: points, rect: rect)
       return path
    }
 }
 
 struct HourForecastView: View {
+   @Environment(\.horizontalSizeClass) var sizeClass
    
    // hourly forecast
    var forecast: [WeatherForecast]
@@ -194,6 +174,14 @@ struct HourForecastView: View {
                      .foregroundStyle(.white)
                      // place below line with a set distance
                      .position(x: points[i].x, y:  points[i].y + 40)
+                  
+                  if sizeClass == .regular {
+                     Text(forecast[i].date, style: .time)
+                        .font(.caption2)
+                        .foregroundStyle(.white)
+                        // place below line with a set distance
+                        .position(x: points[i].x, y:  points[i].y + 65)
+                  }
                }
             }
          } // ZStack

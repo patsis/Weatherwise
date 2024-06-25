@@ -124,7 +124,7 @@ struct WeatherView: View {
             .resizable()
             .scaledToFit()
             .foregroundStyle(.white)
-            .frame(height: 150)
+            .frame(height: sizeClass == .compact ? 150: 200)
          
          // temperature
          Text("\(forecast.temperature)℃")
@@ -198,7 +198,7 @@ struct WeatherView: View {
                Spacer()
                if sizeClass == .compact {
                   // Layout for small screens
-                  
+                                    
                   CompactWeatherConditions(forecast: currentForecast)
                   
                   // daily conditions
@@ -210,7 +210,12 @@ struct WeatherView: View {
                } else {
                   // Layout for large screens
                   
-                  RegularWeatherConditions(forecast: currentForecast)
+                  if orientation.isLandscape {
+                     RegularWeatherConditions(forecast: currentForecast)
+                  } else {
+                     CompactWeatherConditions(forecast: currentForecast)
+                        .padding(.vertical,50) // a harcoded value just to fix some sizes
+                  }
                   
                   // LeftBar, activities, hourly forecast and daily forecast
                   // on tablet we use a different layout
@@ -270,6 +275,7 @@ struct WeatherView: View {
           refresh()
       }
       .environment(viewModel)
+      // .environment(\.timeZone, TimeZone(secondsFromGMT: 0)!)
 
    }
 }

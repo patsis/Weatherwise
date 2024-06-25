@@ -24,7 +24,7 @@ struct TopBar: View {
          } label: {
             Image(systemName: "chevron.down")
                .font(.title3)
-               .foregroundStyle(.accent)
+               .foregroundStyle(.white) // or .accent to use the app accent color defined in xcassets
          }
          
          // push right

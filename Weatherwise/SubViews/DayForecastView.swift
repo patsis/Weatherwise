@@ -21,7 +21,7 @@ struct DayForecastView: View {
          } label: {
             Image(systemName: "chevron.left")               
                .font(.title3)
-               .foregroundStyle(.accent)
+               .foregroundStyle(.white) // or .accent to use the app accent color defined in xcassets
          }
          
          // 5 days/condition view
@@ -37,7 +37,7 @@ struct DayForecastView: View {
          } label: {
             Image(systemName: "chevron.right")
                .font(.title3)
-               .foregroundStyle(.accent)
+               .foregroundStyle(.white) // or .accent to use the app accent color defined in xcassets
          }
       }
    }

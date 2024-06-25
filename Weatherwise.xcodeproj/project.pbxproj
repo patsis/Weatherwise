@@ -79,7 +79,6 @@
 		EEB9F3462C25E46900E4C7B5 = {
 			isa = PBXGroup;
 			children = (
-				4A68D9122C2AC2EA00CE05FC /* Launch Screen.storyboard */,
 				EEB9F3512C25E46900E4C7B5 /* Weatherwise */,
 				EEB9F3502C25E46900E4C7B5 /* Products */,
 			);
@@ -96,6 +95,7 @@
 		EEB9F3512C25E46900E4C7B5 /* Weatherwise */ = {
 			isa = PBXGroup;
 			children = (
+				4A68D9122C2AC2EA00CE05FC /* Launch Screen.storyboard */,
 				4A68D9102C2ABBD500CE05FC /* Helpers */,
 				EEB9F3642C26A03400E4C7B5 /* Models */,
 				EEB9F3652C26A04800E4C7B5 /* ViewModels */,
