@@ -22,9 +22,10 @@ struct LeftBar: View {
                .scaledToFit()
                .frame(height: 60)
          }
-         .padding(.bottom)
+          .padding(.bottom)
+          .frame(maxHeight: .infinity)
 
-         Spacer()
+         // Spacer()
          
          // weather button
          Button {
@@ -40,8 +41,9 @@ struct LeftBar: View {
                   .font(.headline)
             }
             .foregroundStyle(.white)
-            .padding(.vertical)
+            .padding(.bottom)
          }
+         .frame(maxHeight: .infinity)
          
          // explore button
          Button {
@@ -59,6 +61,7 @@ struct LeftBar: View {
             .foregroundStyle(.white)
             .padding(.bottom)
          }
+         .frame(maxHeight: .infinity)
          
          // cities button
          Button {
@@ -75,6 +78,7 @@ struct LeftBar: View {
             }
             .foregroundStyle(.white)
          }
+         .frame(maxHeight: .infinity)
          
          // settings button
          Button {
@@ -92,6 +96,7 @@ struct LeftBar: View {
             .foregroundStyle(.white)
             .padding(.bottom)
          }
+         .frame(maxHeight: .infinity)
 
       } // VStack
       .padding()

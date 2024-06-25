@@ -40,6 +40,7 @@ struct DayForecastView: View {
                .foregroundStyle(.white) // or .accent to use the app accent color defined in xcassets
          }
       }
+      .padding(.vertical)
    }
 }
 

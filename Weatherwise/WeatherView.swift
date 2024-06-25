@@ -143,24 +143,24 @@ struct WeatherView: View {
       HStack {
          VStack(alignment: .leading) {
             // current condition
-            Spacer()
+
+            
             Text(forecast.condition.rawValue)
                .font(.title)
                .foregroundStyle(.white)
             
-            // push down
-            Spacer()
             
             // temperature
             Text("\(forecast.temperature)℃")
-               .font(.system(size: 70))
+               .font(.system(size: 100))
+               .minimumScaleFactor(0.5)
                .foregroundStyle(.white)
             
-            // day
+            // da2
             Text(dateDescription(forecast.date))
                .font(.title3)
                .foregroundStyle(.white)
-            Spacer()
+
          }
          
          // push right
@@ -171,7 +171,7 @@ struct WeatherView: View {
             .resizable()
             .scaledToFit()
             .foregroundStyle(.white)
-            .frame(width: 150)
+            .frame(maxHeight: 150)
       }
       .padding()
    }
@@ -203,8 +203,7 @@ struct WeatherView: View {
                   
                   // daily conditions
                   DayForecastView(selectedDate: $selectedDate)
-                     .padding(.vertical)
-                  
+                                       
                   // hourly (temperature line) forecast
                   HourlyForecastView()                  
                } else {
@@ -212,9 +211,11 @@ struct WeatherView: View {
                   
                   if orientation.isLandscape {
                      RegularWeatherConditions(forecast: currentForecast)
+                        .frame(maxHeight: .infinity)
                   } else {
                      CompactWeatherConditions(forecast: currentForecast)
-                        .padding(.vertical,50) // a harcoded value just to fix some sizes
+                     
+                     DayForecastView(selectedDate: $selectedDate, wide: true)
                   }
                   
                   // LeftBar, activities, hourly forecast and daily forecast
@@ -228,14 +229,7 @@ struct WeatherView: View {
                      VStack(spacing: 20) {
                         
                         // show activities in your ares
-                        if orientation.isLandscape {
-                           ActivitiesView()
-                        } else {
-                           DayForecastView(selectedDate: $selectedDate, wide: true)
-                              // .padding(.vertical, 20)
-                              .frame(maxWidth: .infinity, maxHeight: 250)
-                              .modifier(BlurredBackgroundModifier(sizeClass: sizeClass)) // reusable modifier
-                        }
+                        ActivitiesView()
                         
                         // hourly (temperature line) forecast
                         HourlyForecastView()
@@ -248,7 +242,6 @@ struct WeatherView: View {
                   }
                   .frame(maxHeight: .infinity)
                }
-
             } // if
          } // main VStack
          .containerRelativeFrame(.vertical)
@@ -280,6 +273,6 @@ struct WeatherView: View {
    }
 }
 
-#Preview("iPhone", traits: .portrait) {
+#Preview {
    WeatherView()
 }

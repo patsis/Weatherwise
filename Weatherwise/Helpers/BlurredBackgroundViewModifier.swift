@@ -17,8 +17,8 @@ struct BlurredBackgroundModifier: ViewModifier {
         content
           .background(.ultraThinMaterial) // blur background
           .overlay(RoundedRectangle(cornerRadius: corner)
-             .stroke(.white, lineWidth: 2)
-             .opacity(0.5)
+            .stroke(Color("strokeColor"), lineWidth: 2)
+            .opacity(0.5)
           )
           .cornerRadius(corner)
     }
