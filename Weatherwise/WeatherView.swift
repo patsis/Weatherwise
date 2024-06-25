@@ -7,23 +7,6 @@
 
 import SwiftUI
 
-/// Blurred background view modifier to be used in various elements
-/// Use: .modifier(BlurredBackgroundModifier(sizeClass: sizeClass))
-struct BlurredBackgroundModifier: ViewModifier {
-    let sizeClass: UserInterfaceSizeClass?
-    
-    func body(content: Content) -> some View {
-       let corner: CGFloat = sizeClass == .compact ? 20 : 40
-        content
-          .background(.ultraThinMaterial) // blur background
-          .overlay(RoundedRectangle(cornerRadius: corner)
-             .stroke(.white, lineWidth: 2)
-             .opacity(0.5)
-          )
-          .cornerRadius(corner)
-    }
-}
-
 
 struct WeatherView: View {
    // get the horizontal sizeClass (.compact, .regular)
@@ -43,6 +26,13 @@ struct WeatherView: View {
    
    // selectedDate is used on day selection
    @State private var selectedDate: Date? = nil
+   
+   @State var orientation: UIDeviceOrientation = .unknown
+   let orientationChanged = NotificationCenter
+      .default
+      .publisher(for: UIDevice.orientationDidChangeNotification)
+      .makeConnectable()
+      .autoconnect()
    
    private func refresh() {
       // refresh onAppear or respond to user pull down gesture
@@ -64,6 +54,7 @@ struct WeatherView: View {
       }
    }
    
+   // get background image name based on current conditions
    private func getBackgroundImageName() -> String {
       if let currentForecast {
          switch currentForecast.condition {
@@ -78,6 +69,7 @@ struct WeatherView: View {
       return "sunny"
    }
    
+   // format date to look like "Sautrday | 22 Jun 2024"
    private func dateDescription(_ date: Date) -> String {
       let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "EEEE | dd MMM yyyy"
@@ -85,7 +77,6 @@ struct WeatherView: View {
       return dateFormatter.string(from: date)
    }
 
-   
    // Hourly forecast view
    private func HourlyForecastView() -> some View {
       VStack {
@@ -109,17 +100,18 @@ struct WeatherView: View {
             } label: {
                Text("5-day forecast")
                   .foregroundStyle(.white)
-                  .padding()
+                  .padding(12)
+                  .frame(minWidth: 200)
                   .background(Capsule().fill(Color("someYellow")))
             }
             .padding()
          }
       }
       .frame(maxWidth: .infinity) // fill width
-//      .frame(height: sizeClass == .compact ? 280 : nil) // maximum height
       .modifier(BlurredBackgroundModifier(sizeClass: sizeClass)) // reusable modifier
    }
    
+   // Main Weather conditions for small screens
    private func CompactWeatherConditions(forecast: WeatherForecast) -> some View {
       VStack {
          // current condition
@@ -146,14 +138,17 @@ struct WeatherView: View {
       }
    }
    
+   // Main Weather conditions for large screens
    private func RegularWeatherConditions(forecast: WeatherForecast) -> some View {
       HStack {
          VStack(alignment: .leading) {
             // current condition
+            Spacer()
             Text(forecast.condition.rawValue)
                .font(.title)
                .foregroundStyle(.white)
             
+            // push down
             Spacer()
             
             // temperature
@@ -165,8 +160,10 @@ struct WeatherView: View {
             Text(dateDescription(forecast.date))
                .font(.title3)
                .foregroundStyle(.white)
+            Spacer()
          }
          
+         // push right
          Spacer()
          
          // weather icon
@@ -192,25 +189,27 @@ struct WeatherView: View {
                   .font(.title3)
                   .foregroundStyle(.white)
                   .frame(maxWidth: .infinity)
-               
             }
             
             if let currentForecast {
-               TopBar(sizeClass: sizeClass)
+               TopBar()
                
+               // push down
                Spacer()
-               
-               // current condition
                if sizeClass == .compact {
+                  // Layout for small screens
+                  
                   CompactWeatherConditions(forecast: currentForecast)
                   
                   // daily conditions
-                  DailyForecastView(selectedDate: $selectedDate)
+                  DayForecastView(selectedDate: $selectedDate)
                      .padding(.vertical)
                   
                   // hourly (temperature line) forecast
                   HourlyForecastView()                  
                } else {
+                  // Layout for large screens
+                  
                   RegularWeatherConditions(forecast: currentForecast)
                   
                   // LeftBar, activities, hourly forecast and daily forecast
@@ -218,48 +217,29 @@ struct WeatherView: View {
                   HStack(spacing: 20) {
                      
                      // left tool bar pane
-                     LeftBar(sizeClass: sizeClass)
+                     LeftBar()
                      
                      // VStack with activities and hourly temperature line
                      VStack(spacing: 20) {
+                        
                         // show activities in your ares
-                        VStack {
-                           
-                           // title
-                           Label("Activities in your area", systemImage: "heart.fill")
-                              .font(.title3)
-                              .foregroundStyle(.white)
-                              .frame(maxWidth: .infinity, alignment: .leading)
-
-                           // hardcoded activities list
-                           HStack(spacing: 10) {
-                              // activity 1
-                              ActivityView(name: "activity1", title: "2km away")
-
-                              // activity 2
-                              ActivityView(name: "activity2", title: "1.5km away")
-                              
-                              // activity 3
-                              ActivityView(name: "activity3", title: "3km away")
-
-                              // activity 4
-                              ActivityView(name: "activity4", title: "500m away")
-                           }
-                           .padding()
+                        if orientation.isLandscape {
+                           ActivitiesView()
+                        } else {
+                           DayForecastView(selectedDate: $selectedDate, wide: true)
+                              // .padding(.vertical, 20)
+                              .frame(maxWidth: .infinity, maxHeight: 250)
+                              .modifier(BlurredBackgroundModifier(sizeClass: sizeClass)) // reusable modifier
                         }
-                        .padding()
-//                        .frame(height: 180)
-                        .frame(maxWidth: .infinity)
-                        .modifier(BlurredBackgroundModifier(sizeClass: sizeClass)) // reusable modifier
                         
                         // hourly (temperature line) forecast
                         HourlyForecastView()
                      }
                      
                      // RightBar, daily conditions, time and air conditions
-                     RightBar(selectedDate: $selectedDate)
-                     
-                     
+                      if orientation.isLandscape {
+                        RightBar(selectedDate: $selectedDate)//, orientation: orientation)
+                      }
                   }
                   .frame(maxHeight: .infinity)
                }
@@ -276,10 +256,15 @@ struct WeatherView: View {
             .ignoresSafeArea()
             .scaledToFill()
       )
+      .onReceive(orientationChanged) { _ in
+         self.orientation = UIDevice.current.orientation
+      }
       .onAppear {
          UIRefreshControl.appearance().tintColor = .white
          refresh()
          selectedDate = Date()
+         // set initial orientation
+         orientation = UIDevice.current.orientation
       }
       .refreshable {
           refresh()

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LeftBar: View {
-   let sizeClass: UserInterfaceSizeClass?
+   @Environment(\.horizontalSizeClass) var sizeClass
    let buttonSize: CGFloat = 40
    
    var body: some View {
@@ -24,6 +24,8 @@ struct LeftBar: View {
          }
          .padding(.bottom)
 
+         Spacer()
+         
          // weather button
          Button {
             // do nothing yet
@@ -72,7 +74,6 @@ struct LeftBar: View {
                   .font(.headline)
             }
             .foregroundStyle(.white)
-//            .padding(.bottom)
          }
          
          // settings button
@@ -94,6 +95,7 @@ struct LeftBar: View {
 
       } // VStack
       .padding()
+      .frame(maxHeight: .infinity)
       .modifier(BlurredBackgroundModifier(sizeClass: sizeClass)) // reusable modifier
    }
 }

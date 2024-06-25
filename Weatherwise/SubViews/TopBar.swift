@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TopBar: View {
-   let sizeClass: UserInterfaceSizeClass?
+   @Environment(\.horizontalSizeClass) var sizeClass
    
    var body: some View {
       HStack {
@@ -23,9 +23,11 @@ struct TopBar: View {
             // no action yet, maybe select location
          } label: {
             Image(systemName: "chevron.down")
-               .foregroundStyle(.white)
+               .font(.title3)
+               .foregroundStyle(.accent)
          }
          
+         // push right
          Spacer()
          
          if sizeClass == .compact {
@@ -33,10 +35,10 @@ struct TopBar: View {
             Image("userThumbnail")
                .resizable()
                .scaledToFit()
-               .frame(width: sizeClass == .compact ? 30 : 60)
+               .frame(width: 30)
          }
       } // top HStack
-      .padding(.horizontal)
+      .padding()
    }
 }
 

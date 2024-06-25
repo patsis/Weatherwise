@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DayForecastView: View {
+struct DayForecastViewCell: View {
    var forecast: WeatherForecast
    @Binding var selectedDate: Date?
   

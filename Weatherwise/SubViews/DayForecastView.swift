@@ -8,9 +8,10 @@
 import SwiftUI
 
 // daily forecast view
-struct DailyForecastView: View {
+struct DayForecastView: View {
    @Environment(ViewModel.self) var viewModel
    @Binding var selectedDate: Date?
+   var wide = false
    
    var body: some View {
       HStack {
@@ -20,16 +21,15 @@ struct DailyForecastView: View {
          } label: {
             Image(systemName: "chevron.left")               
                .font(.title3)
-               .foregroundStyle(.orange)
+               .foregroundStyle(.accent)
          }
          
          // 5 days/condition view
          // the day is selectable, but selecting doesn't change the current weather info
          ForEach(viewModel.dailyForecast.prefix(5), id: \.date) { daily in
-            DayForecastView(forecast: daily, selectedDate: $selectedDate)
-               .padding(.horizontal, 8)
+            DayForecastViewCell(forecast: daily, selectedDate: $selectedDate)
+               .padding(.horizontal, wide ? 20 : 8)
          }
-         // .frame(maxWidth: .infinity)
          
          // right button
          Button {
@@ -37,7 +37,7 @@ struct DailyForecastView: View {
          } label: {
             Image(systemName: "chevron.right")
                .font(.title3)
-               .foregroundStyle(.orange)
+               .foregroundStyle(.accent)
          }
       }
    }
