@@ -28,11 +28,6 @@ struct WeatherView: View {
    @State private var selectedDate: Date? = nil
    
    @State var orientation: UIDeviceOrientation = .unknown
-   let orientationChanged = NotificationCenter
-      .default
-      .publisher(for: UIDevice.orientationDidChangeNotification)
-      .makeConnectable()
-      .autoconnect()
    
    private func refresh() {
       // refresh onAppear or respond to user pull down gesture
@@ -177,6 +172,7 @@ struct WeatherView: View {
    }
    
    var body: some View {
+       let _ = print("orientation is landscape \(orientation.isLandscape)")
       ScrollView {
          VStack {
             if networkError {
@@ -254,15 +250,20 @@ struct WeatherView: View {
             .ignoresSafeArea()
             .scaledToFill()
       )
-      .onReceive(orientationChanged) { _ in
-         self.orientation = UIDevice.current.orientation
+      .containerRelativeFrame(.vertical)
+      .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+         withAnimation {
+            self.orientation = UIDevice.current.orientation
+         }
       }
       .onAppear {
          UIRefreshControl.appearance().tintColor = .white
          refresh()
          selectedDate = Date()
          // set initial orientation
-         orientation = UIDevice.current.orientation
+         withAnimation {
+            orientation = UIDevice.current.orientation
+         }
       }
       .refreshable {
           refresh()
