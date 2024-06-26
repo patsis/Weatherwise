@@ -188,12 +188,12 @@ struct HourForecastView: View {
             }
          } // ZStack
          .frame(height: 50)
-         .background( GeometryReader { geometry in
-            Color.clear.onAppear {
-               // on appear we need to do all calculations based on view size
+         .background( GeometryReader { (geometry) -> Path in
+            DispatchQueue.main.async { // to avoid warning
                size = geometry.size
                points = calcPoints(size: size)
             }
+            return Path()
          })
          
          Spacer() // push up
