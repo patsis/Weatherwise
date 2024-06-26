@@ -62,6 +62,7 @@ public class ViewModel {
          // create a JSONDecoder for our data
          let jsonDecoder = JSONDecoder()
          let dateFormatter = DateFormatter()
+         // set the correct date format used in JSON
          dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
          jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
          
@@ -83,6 +84,7 @@ public class ViewModel {
       let jsonData = type == .daily ? dailyJson.data(using: .utf8)! : hourlyJson.data(using: .utf8)!
       let jsonDecoder = JSONDecoder()
       let dateFormatter = DateFormatter()
+      // set the correct date format used in JSON
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
       jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
       

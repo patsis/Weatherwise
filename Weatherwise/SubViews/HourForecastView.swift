@@ -141,11 +141,13 @@ struct HourForecastView: View {
    var body: some View {
       VStack {
          ZStack {
+            // show the smooth bezier curve
             TemperatureCurve(points: points)
                .stroke(style: StrokeStyle(lineWidth: 2))
                .foregroundStyle(Color("someYellow"))
 
             if let point0 = points.first {
+               // show the vertical dashed line
                TemperatureNowLine(point: point0, distance: 40)
                   .stroke(style: StrokeStyle(lineWidth: 1, dash: [3]))
                   .foregroundStyle(Color("someYellow"))
@@ -154,12 +156,12 @@ struct HourForecastView: View {
             // ForEach points indices.
             // We can safely use the same indices on self.forecast to show weather info
             ForEach(points.indices, id: \.self) { i in
+               // show info for every 2 hours
                if i % 2 == 0 {
-                  
-                  // show dots for every 2 hours
+                  // show dots
                   Circle()
                      .fill(.white)
-                     .frame(width: 6, height: 6)
+                     .frame(width: i == 0 ? 6 : 4, height: i == 0 ? 6 : 4) // just a visual detail, the first dot is larger
                      .position(x: points[i].x, y: points[i].y)
                   
                   // temperature for each cell
@@ -188,12 +190,14 @@ struct HourForecastView: View {
          .frame(height: 50)
          .background( GeometryReader { geometry in
             Color.clear.onAppear {
+               // on appear we need to do all calculations based on view size
                size = geometry.size
                points = calcPoints(size: size)
             }
          })
-         Spacer()
-      } // VStack            
+         
+         Spacer() // push up
+      } // VStack
       .frame(maxHeight: .infinity)
    }
 }

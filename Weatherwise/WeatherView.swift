@@ -21,12 +21,13 @@ struct WeatherView: View {
    // currentForecast can be updated when user does a pull-down refresh
    @State private var currentForecast: WeatherForecast?
    
-   // background image depending on weather conditions
+   // Background image depending on weather conditions
    @State private var backgroundImageName: String = "sunny"
    
    // selectedDate is used on day selection
    @State private var selectedDate: Date? = nil
    
+   // Device orientation used in iPad layout, to change what elements can be seen in screen
    @State var orientation: UIDeviceOrientation = .unknown
    
    private func refresh() {
@@ -64,7 +65,7 @@ struct WeatherView: View {
       return "sunny"
    }
    
-   // format date to look like "Sautrday | 22 Jun 2024"
+   // format date to look like "Saturday | 22 Jun 2024"
    private func dateDescription(_ date: Date) -> String {
       let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "EEEE | dd MMM yyyy"
@@ -80,12 +81,12 @@ struct WeatherView: View {
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical)
-            .padding(.horizontal, sizeClass == .compact ? nil : 30)
+            .padding(.horizontal, sizeClass == .compact ? nil : 30) // different padding on defferent devices
          
          // show temperature line and condiions for every 2 hours
          HourForecastView(forecast: viewModel.hourlyForecast)
             .padding(.vertical)
-            .padding(.horizontal, sizeClass == .compact ? 25 : 40)
+            .padding(.horizontal, sizeClass == .compact ? 25 : 40) // different padding on defferent devices
          
          if sizeClass == .compact {
             // show only on iphone
@@ -126,7 +127,7 @@ struct WeatherView: View {
             .font(.system(size: 70))
             .foregroundStyle(.white)
          
-         // day
+         // format date to "Saturday | 22 Jun 2024"
          Text(dateDescription(forecast.date))
             .font(.title3)
             .foregroundStyle(.white)
@@ -137,13 +138,11 @@ struct WeatherView: View {
    private func RegularWeatherConditions(forecast: WeatherForecast) -> some View {
       HStack {
          VStack(alignment: .leading) {
-            // current condition
-
             
+            // current condition as text
             Text(forecast.condition.rawValue)
                .font(.title)
                .foregroundStyle(.white)
-            
             
             // temperature
             Text("\(forecast.temperature)℃")
@@ -151,11 +150,10 @@ struct WeatherView: View {
                .minimumScaleFactor(0.5)
                .foregroundStyle(.white)
             
-            // da2
+            // format date to "Saturday | 22 Jun 2024"
             Text(dateDescription(forecast.date))
                .font(.title3)
                .foregroundStyle(.white)
-
          }
          
          // push right
@@ -172,7 +170,6 @@ struct WeatherView: View {
    }
    
    var body: some View {
-       let _ = print("orientation is landscape \(orientation.isLandscape)")
       ScrollView {
          VStack {
             if networkError {
@@ -240,32 +237,37 @@ struct WeatherView: View {
                }
             } // if
          } // main VStack
-         .containerRelativeFrame(.vertical)
+         .containerRelativeFrame(.vertical) // make VStack the size of container scrollview
          .padding(.horizontal, sizeClass == .compact ? nil : 30)
-         .frame(maxWidth: .infinity)
       } // ScrollView
+      .containerRelativeFrame([.horizontal, .vertical]) // make scroll view fill window / screen
       .background(
+         // background based on current weather condittions and screen size
          Image(sizeClass == .compact ? "\(backgroundImageName)-compact" : backgroundImageName)
-            .resizable()
-            .ignoresSafeArea()
-            .scaledToFill()
+            .resizable() // can be resized
+            .ignoresSafeArea() // full screen
+            .scaledToFill() // fill view, not fit
       )
-      .containerRelativeFrame(.vertical)
       .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
-         withAnimation {
-            self.orientation = UIDevice.current.orientation
-         }
+         // One way to detect device rotation, maybe not the best
+         // update rotation based on current device orientation
+         self.orientation = UIDevice.current.orientation
       }
       .onAppear {
+         // set white color on activity indicator
          UIRefreshControl.appearance().tintColor = .white
-         refresh()
+         // set initial value to selectedDate
          selectedDate = Date()
+         // get data from server
+         refresh()
          // set initial orientation
          withAnimation {
             orientation = UIDevice.current.orientation
          }
       }
       .refreshable {
+         // pull down to refresh
+         // and get data from server
           refresh()
       }
       .environment(viewModel)

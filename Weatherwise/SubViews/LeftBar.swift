@@ -23,9 +23,7 @@ struct LeftBar: View {
                .frame(height: 60)
          }
           .padding(.bottom)
-          .frame(maxHeight: .infinity)
-
-         // Spacer()
+          .frame(maxHeight: .infinity) // equally fill height in VStack
          
          // weather button
          Button {
@@ -43,7 +41,7 @@ struct LeftBar: View {
             .foregroundStyle(.white)
             .padding(.bottom)
          }
-         .frame(maxHeight: .infinity)
+         .frame(maxHeight: .infinity) // equally fill height in VStack
          
          // explore button
          Button {
@@ -61,7 +59,7 @@ struct LeftBar: View {
             .foregroundStyle(.white)
             .padding(.bottom)
          }
-         .frame(maxHeight: .infinity)
+         .frame(maxHeight: .infinity) // equally fill height in VStack
          
          // cities button
          Button {
@@ -78,7 +76,7 @@ struct LeftBar: View {
             }
             .foregroundStyle(.white)
          }
-         .frame(maxHeight: .infinity)
+         .frame(maxHeight: .infinity) // equally fill height in VStack
          
          // settings button
          Button {
@@ -96,11 +94,11 @@ struct LeftBar: View {
             .foregroundStyle(.white)
             .padding(.bottom)
          }
-         .frame(maxHeight: .infinity)
+         .frame(maxHeight: .infinity) // equally fill height in VStack
 
       } // VStack
       .padding()
-      .frame(maxHeight: .infinity)
+      .frame(maxHeight: .infinity) // fill height in container
       .modifier(BlurredBackgroundModifier(sizeClass: sizeClass)) // reusable modifier
    }
 }

@@ -27,6 +27,7 @@ struct DayForecastView: View {
          // 5 days/condition view
          // the day is selectable, but selecting doesn't change the current weather info
          ForEach(viewModel.dailyForecast.prefix(5), id: \.date) { daily in
+            // each day, selectedDate is a binding parameter
             DayForecastViewCell(forecast: daily, selectedDate: $selectedDate)
                .padding(.horizontal, wide ? 20 : 8)
          }

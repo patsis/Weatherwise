@@ -13,11 +13,11 @@ struct BlurredBackgroundModifier: ViewModifier {
     let sizeClass: UserInterfaceSizeClass?
     
     func body(content: Content) -> some View {
-       let corner: CGFloat = sizeClass == .compact ? 20 : 40
+       let corner: CGFloat = sizeClass == .compact ? 20 : 40 // different radius on different devices
         content
           .background(.ultraThinMaterial) // blur background
           .overlay(RoundedRectangle(cornerRadius: corner)
-            .stroke(Color("strokeColor"), lineWidth: 2)
+            .stroke(Color("strokeColor"), lineWidth: 2)// strokeColor from Assets
             .opacity(0.5)
           )
           .cornerRadius(corner)

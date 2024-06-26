@@ -34,14 +34,15 @@ enum WeatherCondition: String, Codable {
 }
 
 struct WeatherForecast: Codable {
-    let date: Date
-    let temperature: Int
-    let realFeel: Int
-    let uvIndex: Int
-    let chanceOfRain: Int
-    let windSpeed: Int
-    let condition: WeatherCondition
-      
+   let date: Date
+   let temperature: Int
+   let realFeel: Int
+   let uvIndex: Int
+   let chanceOfRain: Int
+   let windSpeed: Int
+   let condition: WeatherCondition
+   
+   // Weekday name: MON, TUE, THU...
    var dateAbbreviated: String {
       let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "EEE"

@@ -20,7 +20,7 @@ struct TopBar: View {
             .foregroundStyle(.white)
          
          Button() {
-            // no action yet, maybe select location
+            // no action yet, maybe select a location?
          } label: {
             Image(systemName: "chevron.down")
                .font(.title3)
@@ -31,7 +31,7 @@ struct TopBar: View {
          Spacer()
          
          if sizeClass == .compact {
-            // show user thumbnail on iphones
+            // show user thumbnail on iPhones, not on iPads
             Image("userThumbnail")
                .resizable()
                .scaledToFit()

@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct DayForecastViewCell: View {
+   // WeatherForecast parameter
    var forecast: WeatherForecast
+   // selected date binding parameter
    @Binding var selectedDate: Date?
   
-   private func daysBetween() -> Int? {
-      if let end = selectedDate {
-         let start = forecast.date
+   /// daysBewteen() calculates the distance in calendar days between two dates
+   private func daysBetween(_ start: Date?, _ end: Date?) -> Int? {
+      if let start, let end {
          let calendar = Calendar.current
          // Use Calendar to calculate the difference in days
          let components = calendar.dateComponents([.day], from: calendar.startOfDay(for: start), to: calendar.startOfDay(for: end))
@@ -25,6 +27,7 @@ struct DayForecastViewCell: View {
       return nil
    }
    
+   // opacity based on day distance
    private func opacity(for days: Int?) -> CGFloat {
       guard let days else {
          return 1.0
@@ -36,6 +39,7 @@ struct DayForecastViewCell: View {
       }
    }
    
+   // scale based on day distance
    private func scale(for days: Int?) -> CGFloat {
       guard let days else {
          return 1.0
@@ -49,13 +53,13 @@ struct DayForecastViewCell: View {
    
    var body: some View {
       Button() {
-         // animate selection
+         // animate update selectedDate
          withAnimation {
             selectedDate = forecast.date
          }
       } label: {
          // get dates between selected date and forecast.date
-         let daysBetween = daysBetween()
+         let daysBetween = daysBetween(forecast.date, selectedDate)
          // and calculate scale
          let scale = scale(for: daysBetween)
          // and opacity
